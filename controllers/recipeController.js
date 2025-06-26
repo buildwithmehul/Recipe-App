@@ -112,3 +112,29 @@ exports.filterRecipes = async (req, res) => {
     res.status(500).json({ message: 'Filter failed', error: err.message });
   }
 };
+
+exports.searchRecipes = async (req, res) => {
+  const { q, category } = req.query;
+
+  if (!q || q.trim() === '') {
+    return res.status(400).json({ message: "❌ Query 'q' is required" });
+  }
+
+  try {
+    const regex = new RegExp(q, 'i');
+
+    const filter = {
+      $or: [
+        { title: regex },
+        { ingredients: regex }
+      ]
+    };
+
+    if (category) filter.category = category;
+
+    const results = await Recipe.find(filter).populate('createdBy', 'name');
+    res.json(results);
+  } catch (err) {
+    res.status(500).json({ message: "❌ Search failed", error: err.message });
+  }
+};

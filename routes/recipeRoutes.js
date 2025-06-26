@@ -4,6 +4,7 @@ const {
   createRecipe,
   getAllRecipes,      
   getUserRecipes,
+  searchRecipes,
   updateRecipe,
   deleteRecipe,
   getVegRecipes,
@@ -15,6 +16,7 @@ const auth = require("../middleware/authMiddleware");
 router.post("/", auth, createRecipe);
 router.get("/", getAllRecipes);          
 router.get("/my", auth, getUserRecipes);
+router.get('/search', searchRecipes);
 router.put("/:id", auth, updateRecipe);
 router.delete("/:id", auth, deleteRecipe);
 router.get('/veg/:isVeg', auth, getVegRecipes);
