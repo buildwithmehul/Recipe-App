@@ -116,9 +116,9 @@ npm start
 
 ---
 
-## 🤝 Credits
+## 🤝 Author
 
-Built by [**Mehul Khanna**](https://github.com/buildwithmehul)  
+Built by [**Mehul Khanna**] (https://github.com/buildwithmehul)  
 
 Part of a backend internship project — not just for completion, but for **mastery** 💪
 
