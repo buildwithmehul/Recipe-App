@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const {
   createRecipe,
+  getAllRecipes,      
   getUserRecipes,
   updateRecipe,
   deleteRecipe,
@@ -12,7 +13,8 @@ const {
 const auth = require("../middleware/authMiddleware");
 
 router.post("/", auth, createRecipe);
-router.get("/", auth, getUserRecipes);
+router.get("/", getAllRecipes);          
+router.get("/my", auth, getUserRecipes);
 router.put("/:id", auth, updateRecipe);
 router.delete("/:id", auth, deleteRecipe);
 router.get('/veg/:isVeg', auth, getVegRecipes);
