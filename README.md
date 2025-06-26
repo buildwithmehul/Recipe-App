@@ -101,7 +101,7 @@ JWT_SECRET=your_jwt_secret
 
 4. **Start the server**
 ```bash
-node server.js
+npm start
 ```
 
 ---
