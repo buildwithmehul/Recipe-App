@@ -164,3 +164,37 @@ exports.searchMyRecipes = async (req, res) => {
     res.status(500).json({ message: "Personal search failed", error: err.message });
   }
 };
+
+exports.addReview = async (req, res) => {
+  const { comment, rating } = req.body;
+  const recipeId = req.params.id;
+
+  try {
+    const recipe = await Recipe.findById(recipeId);
+    if (!recipe) return res.status(404).json({ message: "Recipe not found" });
+
+    const alreadyReviewed = recipe.reviews.find(
+      (rev) => rev.user.toString() === req.user.id
+    );
+    if (alreadyReviewed) {
+      return res.status(400).json({ message: "You already reviewed this recipe" });
+    }
+
+    const newReview = {
+      user: req.user.id,
+      comment,
+      rating: Number(rating)
+    };
+
+    recipe.reviews.push(newReview);
+
+    
+    const total = recipe.reviews.reduce((acc, r) => acc + r.rating, 0);
+    recipe.averageRating = total / recipe.reviews.length;
+
+    await recipe.save();
+    res.status(201).json({ message: "Review added", review: newReview });
+  } catch (err) {
+    res.status(500).json({ message: "Failed to add review", error: err.message });
+  }
+};

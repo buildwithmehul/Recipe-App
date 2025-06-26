@@ -10,7 +10,8 @@ const {
   deleteRecipe,
   getVegRecipes,
   getRecipesByCategory,
-  filterRecipes
+  filterRecipes,
+  addReview
 } = require("../controllers/recipeController");
 const auth = require("../middleware/authMiddleware");
 
@@ -24,5 +25,6 @@ router.delete("/:id", auth, deleteRecipe);
 router.get('/veg/:isVeg', auth, getVegRecipes);
 router.get('/category/:category', auth, getRecipesByCategory);
 router.get('/filter', auth, filterRecipes);
+router.post("/:id/reviews", auth, addReview);
 
 module.exports = router;
