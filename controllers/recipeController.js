@@ -117,7 +117,7 @@ exports.searchRecipes = async (req, res) => {
   const { q, category } = req.query;
 
   if (!q || q.trim() === '') {
-    return res.status(400).json({ message: "❌ Query 'q' is required" });
+    return res.status(400).json({ message: "Query 'q' is required" });
   }
 
   try {
@@ -135,6 +135,32 @@ exports.searchRecipes = async (req, res) => {
     const results = await Recipe.find(filter).populate('createdBy', 'name');
     res.json(results);
   } catch (err) {
-    res.status(500).json({ message: "❌ Search failed", error: err.message });
+    res.status(500).json({ message: "Search failed", error: err.message });
+  }
+};
+
+exports.searchMyRecipes = async (req, res) => {
+  const { q, category } = req.query;
+
+  if (!q || q.trim() === '') {
+    return res.status(400).json({ message: "Query 'q' is required" });
+  }
+
+  try {
+    const regex = new RegExp(q, 'i');
+    const filter = {
+      createdBy: req.user.id,
+      $or: [
+        { title: regex },
+        { ingredients: regex }
+      ]
+    };
+
+    if (category) filter.category = category;
+
+    const results = await Recipe.find(filter);
+    res.json(results);
+  } catch (err) {
+    res.status(500).json({ message: "Personal search failed", error: err.message });
   }
 };
