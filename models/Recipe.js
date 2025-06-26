@@ -7,6 +7,11 @@ const recipeSchema = new mongoose.Schema({
   steps: [String],
   imageUrl: String,
   isVeg: { type: Boolean, default: false },
+  category: {
+    type: String,
+    enum: ['Breakfast', 'Lunch', 'Dinner', 'Snack', 'Dessert', 'Other'],
+    default: 'Other',
+  },
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
 }, { timestamps: true });
 

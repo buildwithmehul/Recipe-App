@@ -9,9 +9,10 @@ exports.createRecipe = async (req, res) => {
       steps: req.body.steps,
       imageUrl: req.body.imageUrl,
       isVeg: req.body.isVeg,
+      category: req.body.category,
       createdBy: req.user.id,
     });
-
+  
     await newRecipe.save();
     res.status(201).json(newRecipe);
   } catch (err) {
@@ -25,6 +26,18 @@ exports.getUserRecipes = async (req, res) => {
     res.json(recipes);
   } catch (err) {
     res.status(500).json({ message: "❌ Failed to fetch recipes", error: err.message });
+  }
+};
+exports.getVegRecipes = async (req, res) => {
+  try {
+    const isVeg = req.params.isVeg === 'true'; // convert string to boolean
+    const recipes = await Recipe.find({
+      createdBy: req.user.id,
+      isVeg: isVeg
+    });
+    res.json(recipes);
+  } catch (err) {
+    res.status(500).json({ message: "❌ Failed to fetch veg/non-veg recipes", error: err.message });
   }
 };
 
@@ -61,5 +74,30 @@ exports.deleteRecipe = async (req, res) => {
   } catch (err) {
     console.error("❌ Delete error:", err);
     res.status(500).json({ message: "❌ Server error", error: err.message });
+  }
+};
+exports.getRecipesByCategory = async (req, res) => {
+  try {
+    const recipes = await Recipe.find({
+      createdBy: req.user.id,
+      category: req.params.category
+    });
+    res.json(recipes);
+  } catch (err) {
+    res.status(500).json({ message: "❌ Could not fetch recipes", error: err.message });
+  }
+};
+exports.filterRecipes = async (req, res) => {
+  const { category, isVeg } = req.query;
+  const filter = { createdBy: req.user.id };
+
+  if (category) filter.category = category;
+  if (isVeg !== undefined) filter.isVeg = isVeg === 'true';
+
+  try {
+    const recipes = await Recipe.find(filter);
+    res.json(recipes);
+  } catch (err) {
+    res.status(500).json({ message: '❌ Filter failed', error: err.message });
   }
 };
