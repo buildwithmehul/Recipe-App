@@ -10,9 +10,12 @@ app.use(express.json());
 
 const authRoutes = require('./routes/authRoutes');
 const recipeRoutes = require('./routes/recipeRoutes');
+const userRoutes = require('./routes/userRoutes');
+
 
 app.use('/api/auth', authRoutes);
 app.use('/api/recipes', recipeRoutes);
+app.use('/api/users', userRoutes);
 
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
